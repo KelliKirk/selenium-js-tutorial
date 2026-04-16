@@ -1,17 +1,21 @@
-const { Builder, By, until } = require('selenium-webdriver');
-const firefox = require('selenium-webdriver/firefox');
+const { Builder } = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
 
 async function createDriver() {
+    const options = new chrome.Options();
 
-    let options = new firefox.Options();
-    options.addArguments('-profile');
-    options.setProfile('/opt/selenium-firefox-profile');
-    options.setPreference('browser.startup.page', 0);
-    options.setPreference('browser.startup.homepage', 'about:blank');
-    options.setBinary('/usr/bin/firefox');
+    options.setChromeBinaryPath('/usr/bin/chromium-browser');
 
-    return await new Builder()
-        .forBrowser('firefox')
+    options.addArguments(
+        "--no-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--user-data-dir=/tmp/selenium-profile"
+    );
+
+    return new Builder()
+        .forBrowser('chrome')
+        .setChromeOptions(options)
         .build();
 }
 
